@@ -3,11 +3,12 @@ from bson import ObjectId
 from typing import List, Optional, Dict
 from app.models import Post
 from app.database import posts_collection
+import logging
 
 router = APIRouter()
 
 # convert MongoDB documents to Pydantic model-compatible dictionaries
-def convert_post(post) -> dict:
+def convert_post(post:Post) -> dict:
     return {
         "_id": str(post["_id"]),
         "userId": int(post["userId"]),
@@ -58,6 +59,7 @@ async def create_post(post: Post):
 async def get_post(post_id: str):
     try:
         post = await posts_collection.find_one({"_id": ObjectId(post_id)})
+        
         if post:
             return post
         else:
@@ -75,7 +77,7 @@ async def update_post(post_id: str, post: Post):
             {"_id": ObjectId(post_id)},
             {"$set": post_data}
         )
-
+        print(result)
         if result.modified_count == 1:
             updated_post = await posts_collection.find_one({"_id": ObjectId(post_id)})
             return updated_post
