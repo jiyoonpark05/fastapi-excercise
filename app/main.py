@@ -8,4 +8,4 @@ app.include_router(comments.router, prefix="/comments", tags=["Comments"])
 
 @app.get("/", tags=["Root"])
 async def read_root():
-    return {"message": "hello world"}
+    return {"message": "API Development Exercise"}
